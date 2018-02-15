@@ -1,32 +1,58 @@
-export default function parseTouchData(touch, timeStamp) {
-  const touchData = this.get('currentTouches').objectAt(touch.identifier);
+import { assign } from "@ember/polyfills"
 
-  if(touchData.current){
-    touchData.current.deltaX = touch.clientX - touchData.current.x;
-    touchData.current.deltaY = touch.clientY - touchData.current.y;
+export default function parseTouchData(previousTouchData, touch, timeStamp) {
+  const touchData = assign({}, previousTouchData);
+  const data = touchData.data;
+
+  if(data.current){
+    data.current.deltaX = touch.clientX - data.current.x;
+    data.current.deltaY = touch.clientY - data.current.y;
   } else {
-    touchData.current = {};
-    touchData.current.deltaX = touch.clientX - touchData.initial.x;
-    touchData.current.deltaY = touch.clientY - touchData.initial.y;
+    data.current = {};
+    data.current.deltaX = touch.clientX - data.initial.x;
+    data.current.deltaY = touch.clientY - data.initial.y;
   }
 
-  touchData.current.x = touch.clientX;
-  touchData.current.y = touch.clientY;
-  touchData.current.distance = getPointDistance(touchData.initial.x, touch.clientX, touchData.initial.y, touch.clientY);
-  touchData.current.angle = getAngle(touchData.initial.x, touchData.initial.y,  touch.clientX, touch.clientY);
+  data.current.x = touch.clientX;
+  data.current.y = touch.clientY;
+  data.current.distance = getPointDistance(data.initial.x, touch.clientX, data.initial.y, touch.clientY);
+  data.current.distanceX = touch.clientX - data.initial.x;
+  data.current.distanceY = touch.clientY - data.initial.y;
+  data.current.angle = getAngle(data.initial.x, data.initial.y,  touch.clientX, touch.clientY);
 
-  const deltaTime = timeStamp - touchData.lastTimeStamp;
+  const deltaTime = timeStamp - data.timeStamp;
   if(deltaTime > 25){
-    touchData.current.velocityX = touchData.current.deltaX / deltaTime || 0;
-    touchData.current.velocityY = touchData.current.deltaY / deltaTime || 0;
-    touchData.current.velocity = Math.abs(touchData.current.velocityX) > Math.abs(touchData.current.velocityY)
-      ? touchData.current.velocityX
-      : touchData.current.velocityY;
+    data.current.velocityX = data.current.deltaX / deltaTime || 0;
+    data.current.velocityY = data.current.deltaY / deltaTime || 0;
+    data.current.velocity = Math.abs(data.current.velocityX) > Math.abs(data.current.velocityY)
+      ? data.current.velocityX
+      : data.current.velocityY;
 
-    touchData.lastTimeStamp = timeStamp;
+    data.timeStamp = timeStamp;
   }
+
+  touchData.data = data;
 
   return touchData;
+}
+
+export function isHorizontal(touchData){
+  const direction = getDirection(touchData.data.current.distanceX, touchData.data.current.distanceY);
+  return direction === 'left' || direction === 'right';
+}
+export function isVertical(touchData){
+  const direction = getDirection(touchData.data.current.distanceX, touchData.data.current.distanceY);
+  return direction === 'down' || direction === 'up';
+}
+
+function getDirection(x, y) {
+  if(x === y){
+    return 'none';
+  } else if(Math.abs(x) >= Math.abs(y)){
+    return x < 0 ? 'left' : 'right';
+  } else {
+    return y < 0 ? 'down' : 'up';
+  }
 }
 
 function getPointDistance(x0, x1, y0, y1) {
