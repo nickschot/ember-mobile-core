@@ -1,6 +1,35 @@
 import { assign } from "@ember/polyfills"
 
-export default function parseTouchData(previousTouchData, touch, timeStamp) {
+/**
+ * Generate initial touch data for passed Touch
+ * @param touch A Touch instance
+ * @param e The touch{start,move,end} event
+ * @returns {{data: {initial: {x: number, y: number, timeStamp: *|number}, timeStamp: *|number, originalEvent: *}, panStarted: boolean, panDenied: boolean}}
+ */
+export function parseInitialTouchData(touch, e){
+  return {
+    data: {
+      initial: {
+        x: touch.clientX,
+        y: touch.clientY,
+        timeStamp: e.timeStamp
+      },
+      timeStamp: e.timeStamp,
+      originalEvent: e
+    },
+    panStarted: false,
+    panDenied: false,
+  }
+}
+
+/**
+ * Generates useful touch data from current event based on previously generated data
+ * @param previousTouchData Previous data returned by this or the parseInitialTouchData function
+ * @param touch A Touch instance
+ * @param e The touch{start,move,end} event
+ * @returns {*} The new touch data
+ */
+export default function parseTouchData(previousTouchData, touch, e) {
   const touchData = assign({}, previousTouchData);
   const data = touchData.data;
 
@@ -20,7 +49,7 @@ export default function parseTouchData(previousTouchData, touch, timeStamp) {
   data.current.distanceY = touch.clientY - data.initial.y;
   data.current.angle = getAngle(data.initial.x, data.initial.y,  touch.clientX, touch.clientY);
 
-  const deltaTime = timeStamp - data.timeStamp;
+  const deltaTime = e.timeStamp - data.timeStamp;
   if(deltaTime > 25){
     data.current.velocityX = data.current.deltaX / deltaTime || 0;
     data.current.velocityY = data.current.deltaY / deltaTime || 0;
@@ -28,8 +57,10 @@ export default function parseTouchData(previousTouchData, touch, timeStamp) {
       ? data.current.velocityX
       : data.current.velocityY;
 
-    data.timeStamp = timeStamp;
+    data.timeStamp = e.timeStamp;
   }
+
+  data.originalEvent = e;
 
   touchData.data = data;
 

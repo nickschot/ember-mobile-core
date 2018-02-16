@@ -1,6 +1,7 @@
 import Mixin from '@ember/object/mixin';
 import { get, set } from '@ember/object';
 import parseTouchData, {
+  parseInitialTouchData,
   isHorizontal,
   isVertical
 } from 'ember-mobile-core/utils/parse-touch-data';
@@ -27,6 +28,8 @@ export default Mixin.create({
   panEnd(){},
 
   didInsertElement(){
+    this._super(...arguments);
+
     // if an axis is set, limit scroll to a single axis
     const axis = get(this, 'axis');
     if(axis === 'horizontal'){
@@ -42,8 +45,11 @@ export default Mixin.create({
     this.element.addEventListener('touchstart', get(this, 'didTouchStart').bind(this), options);
     this.element.addEventListener('touchmove', get(this, 'didTouchMove').bind(this), options);
     this.element.addEventListener('touchend', get(this, 'didTouchEnd').bind(this), options);
+    this.element.addEventListener('touchcancel', get(this, 'didTouchEnd').bind(this), options);
   },
   willDestroyElement(){
+    this._super(...arguments);
+
     const options = {
       capture: get(this, 'useCapture'),
       passive: true
@@ -51,24 +57,13 @@ export default Mixin.create({
     this.element.removeEventListener('touchstart', get(this, 'didTouchStart').bind(this), options);
     this.element.removeEventListener('touchmove', get(this, 'didTouchMove').bind(this), options);
     this.element.removeEventListener('touchend', get(this, 'didTouchEnd').bind(this), options);
+    this.element.removeEventListener('touchcancel', get(this, 'didTouchEnd').bind(this), options);
   },
 
   // events
   didTouchStart(e){
     for(const touch of e.changedTouches){
-      const touchData = {
-        data: {
-          initial: {
-            x: touch.clientX,
-            y: touch.clientY,
-            timeStamp: e.timeStamp
-          },
-          timeStamp: e.timeStamp,
-          originalEvent: e
-        },
-        panStarted: false,
-        panDenied: false,
-      };
+      const touchData = parseInitialTouchData(touch, e);
 
       get(this, 'currentTouches').insertAt(touch.identifier, touchData);
     }
@@ -76,13 +71,11 @@ export default Mixin.create({
   didTouchMove(e){
     for(const touch of e.changedTouches){
       const previousTouchData = get(this, 'currentTouches').objectAt(touch.identifier);
-      const touchData = parseTouchData(previousTouchData, touch, e.timeStamp);
-
-      // update original event
-      touchData.data.originalEvent = e;
+      const touchData = parseTouchData(previousTouchData, touch, e);
 
       if(touchData.panStarted){
         //TODO: make an API for this? We'd likely always want propagation to stop if a pan is active
+        // maybe use a service to detect the active pan action?
         e.stopPropagation();
         this.pan(touchData.data);
       } else {
@@ -103,6 +96,7 @@ export default Mixin.create({
             touchData.panStarted = true; //TODO: maybe keep this private
 
             //TODO: make an API for this? We'd likely always want propagation to stop if a pan is active
+            // maybe use a service to detect the active pan action?
             e.stopPropagation();
 
             // trigger panStart hook
@@ -119,10 +113,7 @@ export default Mixin.create({
   didTouchEnd(e){
     for(const touch of e.changedTouches){
       const previousTouchData = get(this, 'currentTouches').objectAt(touch.identifier);
-      const touchData = parseTouchData(previousTouchData, touch, e.timeStamp);
-
-      // update original event
-      touchData.data.originalEvent = e;
+      const touchData = parseTouchData(previousTouchData, touch, e);
 
       if(touchData.panStarted){
         this.panEnd(touchData.data);
@@ -130,6 +121,5 @@ export default Mixin.create({
 
       get(this, 'currentTouches').removeAt(touch.identifier, 1);
     }
-  },
-  //TODO: touchCancel?
+  }
 });
