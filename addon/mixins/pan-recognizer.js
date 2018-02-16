@@ -86,7 +86,8 @@ export default Mixin.create({
       const touchData = parseTouchData(previousTouchData, touch, e);
 
       if(touchData.panStarted){
-        if(get(this, 'panManager.panLocked') === get(this, 'elementId')){
+        //fire didPan hook only if there is a lock on the current element or there is no lock
+        if(get(this, 'panManager.panLocked') === get(this, 'elementId') || !get(this, 'panManager.panLocked')){
           this.didPan(touchData.data);
         }
       } else if(!get(this, 'panManager.panLocked')){
@@ -122,7 +123,7 @@ export default Mixin.create({
       const previousTouchData = get(this, 'currentTouches').objectAt(touch.identifier);
       const touchData = parseTouchData(previousTouchData, touch, e);
 
-      if(touchData.panStarted && get(this, 'panManager.panLocked') === get(this, 'elementId')){
+      if(touchData.panStarted && (get(this, 'panManager.panLocked') === get(this, 'elementId') || !get(this, 'panManager.panLocked'))){
         this.didPanEnd(touchData.data);
       }
 
