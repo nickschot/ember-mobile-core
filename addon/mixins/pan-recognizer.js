@@ -6,12 +6,16 @@ import parseTouchData, {
   isVertical
 } from 'ember-mobile-core/utils/parse-touch-data';
 import { A } from '@ember/array';
+import { inject as service } from '@ember/service';
 
 export default Mixin.create({
+  panManager: service(),
+
   // public
   threshold: 10,
   axis: 'horizontal',
   useCapture: false,
+  panArea: null,
 
   // private
   currentTouches: null,
@@ -23,9 +27,17 @@ export default Mixin.create({
   },
 
   // hooks
-  panStart(){},
-  pan(){},
-  panEnd(){},
+  didPanStart(){},
+  didPan(){},
+  didPanEnd(){},
+
+  //public functions
+  lockPan(){
+    get(this, 'panManager').lock(get(this, 'elementId'));
+  },
+  unlockPan(){
+    get(this, 'panManager').unlock(get(this, 'elementId'));
+  },
 
   didInsertElement(){
     this._super(...arguments);
@@ -74,11 +86,10 @@ export default Mixin.create({
       const touchData = parseTouchData(previousTouchData, touch, e);
 
       if(touchData.panStarted){
-        //TODO: make an API for this? We'd likely always want propagation to stop if a pan is active
-        // maybe use a service to detect the active pan action?
-        e.stopPropagation();
-        this.pan(touchData.data);
-      } else {
+        if(get(this, 'panManager.panLocked') === get(this, 'elementId')){
+          this.didPan(touchData.data);
+        }
+      } else if(!get(this, 'panManager.panLocked')){
         const axis = get(this, 'axis');
 
         // only pan when pan wasn't denied and the threshold for the given axis is achieved
@@ -93,14 +104,10 @@ export default Mixin.create({
           if(  (axis === 'horizontal' && isHorizontal(touchData))
             || (axis === 'vertical' && isVertical(touchData))
           ){
-            touchData.panStarted = true; //TODO: maybe keep this private
-
-            //TODO: make an API for this? We'd likely always want propagation to stop if a pan is active
-            // maybe use a service to detect the active pan action?
-            e.stopPropagation();
+            touchData.panStarted = true;
 
             // trigger panStart hook
-            this.panStart(touchData.data);
+            this.didPanStart(touchData.data);
           } else {
             touchData.panDenied = true;
           }
@@ -115,11 +122,13 @@ export default Mixin.create({
       const previousTouchData = get(this, 'currentTouches').objectAt(touch.identifier);
       const touchData = parseTouchData(previousTouchData, touch, e);
 
-      if(touchData.panStarted){
-        this.panEnd(touchData.data);
+      if(touchData.panStarted && get(this, 'panManager.panLocked') === get(this, 'elementId')){
+        this.didPanEnd(touchData.data);
       }
 
       get(this, 'currentTouches').removeAt(touch.identifier, 1);
     }
+
+    this.unlockPan();
   }
 });
