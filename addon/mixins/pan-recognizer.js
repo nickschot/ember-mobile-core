@@ -1,14 +1,16 @@
 import Mixin from '@ember/object/mixin';
 import { get, set } from '@ember/object';
+import { inject as service } from '@ember/service';
+import { A } from '@ember/array';
+
+import RunOnRafMixin from 'ember-mobile-core/mixins/run-on-raf';
 import parseTouchData, {
   parseInitialTouchData,
   isHorizontal,
   isVertical
 } from 'ember-mobile-core/utils/parse-touch-data';
-import { A } from '@ember/array';
-import { inject as service } from '@ember/service';
 
-export default Mixin.create({
+export default Mixin.create(RunOnRafMixin, {
   panManager: service(),
 
   // public
@@ -86,9 +88,9 @@ export default Mixin.create({
       const touchData = parseTouchData(previousTouchData, touch, e);
 
       if(touchData.panStarted){
-        //fire didPan hook only if there is a lock on the current element or there is no lock
+        // fire didPan hook only if there is a lock on the current element or there is no lock
         if(get(this, 'panManager.panLocked') === get(this, 'elementId') || !get(this, 'panManager.panLocked')){
-          this.didPan(touchData.data);
+          this.runOnRaf(() => this.didPan(touchData.data));
         }
       } else if(!get(this, 'panManager.panLocked')){
         const axis = get(this, 'axis');
