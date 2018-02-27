@@ -17,6 +17,7 @@ export default Mixin.create(RunOnRafMixin, {
   threshold: 10,
   axis: 'horizontal',
   useCapture: false,
+  preventScroll: true,
   panArea: null,
 
   // private
@@ -57,7 +58,7 @@ export default Mixin.create(RunOnRafMixin, {
       passive: true
     };
     this.element.addEventListener('touchstart', get(this, 'didTouchStart').bind(this), options);
-    this.element.addEventListener('touchmove', get(this, 'didTouchMove').bind(this), options);
+    this.element.addEventListener('touchmove', get(this, 'didTouchMove').bind(this), {capture: get(this, 'useCapture')});
     this.element.addEventListener('touchend', get(this, 'didTouchEnd').bind(this), options);
     this.element.addEventListener('touchcancel', get(this, 'didTouchEnd').bind(this), options);
   },
@@ -69,7 +70,7 @@ export default Mixin.create(RunOnRafMixin, {
       passive: true
     };
     this.element.removeEventListener('touchstart', get(this, 'didTouchStart').bind(this), options);
-    this.element.removeEventListener('touchmove', get(this, 'didTouchMove').bind(this), options);
+    this.element.removeEventListener('touchmove', get(this, 'didTouchMove').bind(this), {capture: get(this, 'useCapture')});
     this.element.removeEventListener('touchend', get(this, 'didTouchEnd').bind(this), options);
     this.element.removeEventListener('touchcancel', get(this, 'didTouchEnd').bind(this), options);
   },
@@ -92,6 +93,11 @@ export default Mixin.create(RunOnRafMixin, {
       const touchData = parseTouchData(previousTouchData, touch, e);
 
       if(touchData.panStarted){
+        // prevent scroll if a pan is still busy
+        if(get(this, 'preventScroll')){
+          e.preventDefault();
+        }
+
         // fire didPan hook only if there is a lock on the current element or there is no lock
         if(get(this, 'panManager.panLocked') === get(this, 'elementId') || !get(this, 'panManager.panLocked')){
           this.runOnRaf(() => this.didPan(touchData.data));
@@ -111,6 +117,11 @@ export default Mixin.create(RunOnRafMixin, {
           if(  (axis === 'horizontal' && isHorizontal(touchData))
             || (axis === 'vertical' && isVertical(touchData))
           ){
+            // prevent scroll if a pan is detected
+            if(get(this, 'preventScroll')){
+              e.preventDefault();
+            }
+
             touchData.panStarted = true;
 
             // trigger panStart hook
