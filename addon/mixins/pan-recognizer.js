@@ -25,7 +25,7 @@ export default Mixin.create(RunOnRafMixin, {
   init(){
     this._super(...arguments);
 
-    set(this, 'currentTouches', A());
+    set(this, 'currentTouches', new Map());
   },
 
   // hooks
@@ -76,15 +76,19 @@ export default Mixin.create(RunOnRafMixin, {
 
   // events
   didTouchStart(e){
+    const currentTouches = get(this, 'currentTouches');
+
     for(const touch of e.changedTouches){
       const touchData = parseInitialTouchData(touch, e);
 
-      get(this, 'currentTouches').insertAt(touch.identifier, touchData);
+      currentTouches.set(touch.identifier, touchData);
     }
   },
   didTouchMove(e){
+    const currentTouches = get(this, 'currentTouches');
+
     for(const touch of e.changedTouches){
-      const previousTouchData = get(this, 'currentTouches').objectAt(touch.identifier);
+      const previousTouchData = currentTouches.get(touch.identifier);
       const touchData = parseTouchData(previousTouchData, touch, e);
 
       if(touchData.panStarted){
@@ -117,19 +121,21 @@ export default Mixin.create(RunOnRafMixin, {
         }
       }
 
-      get(this, 'currentTouches').splice(touch.identifier, 1, touchData);
+      currentTouches.set(touch.identifier, touchData);
     }
   },
   didTouchEnd(e){
+    const currentTouches = get(this, 'currentTouches');
+
     for(const touch of e.changedTouches){
-      const previousTouchData = get(this, 'currentTouches').objectAt(touch.identifier);
+      const previousTouchData = currentTouches.get(touch.identifier);
       const touchData = parseTouchData(previousTouchData, touch, e);
 
       if(touchData.panStarted && (get(this, 'panManager.panLocked') === get(this, 'elementId') || !get(this, 'panManager.panLocked'))){
         this.didPanEnd(touchData.data);
       }
 
-      get(this, 'currentTouches').removeAt(touch.identifier, 1);
+      currentTouches.delete(touch.identifier);
     }
 
     this.unlockPan();
