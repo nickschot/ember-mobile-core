@@ -1,3 +1,1 @@
-export default function getWindowWidth() {
-  return window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
-}
+export { default } from 'ember-mobile-core/utils/get-window-width';
