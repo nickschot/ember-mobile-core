@@ -33,6 +33,10 @@ export default function parseTouchData(previousTouchData, touch, e) {
   const touchData = assign({}, previousTouchData);
   const data = touchData.data;
 
+  if(!data.cache){
+    data.cache = {};
+  }
+
   if(data.current){
     data.current.deltaX = touch.clientX - data.current.x;
     data.current.deltaY = touch.clientY - data.current.y;
@@ -50,7 +54,13 @@ export default function parseTouchData(previousTouchData, touch, e) {
   data.current.angle = getAngle(data.initial.x, data.initial.y,  touch.clientX, touch.clientY);
 
   const deltaTime = e.timeStamp - data.timeStamp;
-  if(deltaTime > 25){
+  if(deltaTime > 1000/30) {
+    data.current.overallVelocityX = data.current.distanceX / deltaTime || 0;
+    data.current.overallVelocityY = data.current.distanceY / deltaTime || 0;
+    data.current.overallVelocity = Math.abs(data.current.overallVelocityX) > Math.abs(data.current.overallVelocityY)
+      ? data.current.overallVelocityX
+      : data.current.overallVelocityY;
+
     data.current.velocityX = data.current.deltaX / deltaTime || 0;
     data.current.velocityY = data.current.deltaY / deltaTime || 0;
     data.current.velocity = Math.abs(data.current.velocityX) > Math.abs(data.current.velocityY)
@@ -59,7 +69,6 @@ export default function parseTouchData(previousTouchData, touch, e) {
 
     data.timeStamp = e.timeStamp;
   }
-
   data.originalEvent = e;
 
   touchData.data = data;
