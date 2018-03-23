@@ -14,6 +14,13 @@ export function parseInitialTouchData(touch, e){
         y: touch.clientY,
         timeStamp: e.timeStamp
       },
+      cache: {
+        velocity: {
+          distanceX: 0,
+          distanceY: 0,
+          timeStamp: e.timeStamp
+        }
+      },
       timeStamp: e.timeStamp,
       originalEvent: e
     },
@@ -33,10 +40,6 @@ export default function parseTouchData(previousTouchData, touch, e) {
   const touchData = assign({}, previousTouchData);
   const data = touchData.data;
 
-  if(!data.cache){
-    data.cache = {};
-  }
-
   if(data.current){
     data.current.deltaX = touch.clientX - data.current.x;
     data.current.deltaY = touch.clientY - data.current.y;
@@ -53,23 +56,31 @@ export default function parseTouchData(previousTouchData, touch, e) {
   data.current.distanceY = touch.clientY - data.initial.y;
   data.current.angle = getAngle(data.initial.x, data.initial.y,  touch.clientX, touch.clientY);
 
-  const deltaTime = e.timeStamp - data.timeStamp;
-  if(deltaTime > 1000/30) {
-    data.current.overallVelocityX = data.current.distanceX / deltaTime || 0;
-    data.current.overallVelocityY = data.current.distanceY / deltaTime || 0;
-    data.current.overallVelocity = Math.abs(data.current.overallVelocityX) > Math.abs(data.current.overallVelocityY)
-      ? data.current.overallVelocityX
-      : data.current.overallVelocityY;
+  // overallVelocity can be calculated continuously
+  const overallDeltaTime = e.timeStamp - data.initial.timeStamp;
+  data.current.overallVelocityX = data.current.distanceX / overallDeltaTime || 0;
+  data.current.overallVelocityY = data.current.distanceY / overallDeltaTime || 0;
+  data.current.overallVelocity = Math.abs(data.current.overallVelocityX) > Math.abs(data.current.overallVelocityY)
+    ? data.current.overallVelocityX
+    : data.current.overallVelocityY;
 
-    data.current.velocityX = data.current.deltaX / deltaTime || 0;
-    data.current.velocityY = data.current.deltaY / deltaTime || 0;
+  const deltaTime = e.timeStamp - data.cache.velocity.timeStamp;
+  if(deltaTime > 33.34) {
+    data.current.velocityX = (data.current.distanceX - data.cache.velocity.distanceX) / deltaTime || 0;
+    data.current.velocityY = (data.current.distanceY - data.cache.velocity.distanceY) / deltaTime || 0;
     data.current.velocity = Math.abs(data.current.velocityX) > Math.abs(data.current.velocityY)
       ? data.current.velocityX
       : data.current.velocityY;
 
-    data.timeStamp = e.timeStamp;
+    data.cache.velocity = {
+      distanceX: data.current.distanceX,
+      distanceY: data.current.distanceY,
+      timeStamp: e.timeStamp
+    };
   }
+
   data.originalEvent = e;
+  data.timeStamp = e.timeStamp;
 
   touchData.data = data;
 
