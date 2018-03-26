@@ -1,7 +1,6 @@
 import Mixin from '@ember/object/mixin';
 import { get, set } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { A } from '@ember/array';
 
 import RunOnRafMixin from 'ember-mobile-core/mixins/run-on-raf';
 import parseTouchData, {
