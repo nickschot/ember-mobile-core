@@ -1,7 +1,9 @@
 ember-mobile-core
 ==============================================================================
 
-[Short description of the addon.]
+Provides a pan recognizer and some utils for the ember-mobile-* addons
+
+[![Build Status](https://travis-ci.org/nickschot/ember-mobile-core.svg?branch=master)](https://travis-ci.org/nickschot/ember-mobile-core)
 
 Installation
 ------------------------------------------------------------------------------
