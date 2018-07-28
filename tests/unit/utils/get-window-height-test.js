@@ -1,11 +1,10 @@
 import getWindowHeight from 'dummy/utils/get-window-height';
 import { module, test } from 'qunit';
 
-module('Unit | Utility | get-window-height', function(hooks) {
+module('Unit | Utility | get-window-height', function() {
 
-  // Replace this with your real tests.
-  test('it works', function(assert) {
+  test('it returns the window height', function(assert) {
     let result = getWindowHeight();
-    assert.ok(result);
+    assert.equal(result, window.innerHeight);
   });
 });

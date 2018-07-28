@@ -1,11 +1,10 @@
 import getWindowWidth from 'dummy/utils/get-window-width';
 import { module, test } from 'qunit';
 
-module('Unit | Utility | get-window-width', function(hooks) {
+module('Unit | Utility | get-window-width', function() {
 
-  // Replace this with your real tests.
-  test('it works', function(assert) {
+  test('it returns the window height', function(assert) {
     let result = getWindowWidth();
-    assert.ok(result);
+    assert.equal(result, window.innerWidth);
   });
 });

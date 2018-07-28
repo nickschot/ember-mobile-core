@@ -36,7 +36,7 @@ export function parseInitialTouchData(touch, e){
  * @param e The touch{start,move,end} event
  * @returns {*} The new touch data
  */
-export default function parseTouchData(previousTouchData, touch, e) {
+export function parseTouchData(previousTouchData, touch, e) {
   const touchData = assign({}, previousTouchData);
   const data = touchData.data;
 
