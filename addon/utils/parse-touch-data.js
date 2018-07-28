@@ -87,15 +87,32 @@ export function parseTouchData(previousTouchData, touch, e) {
   return touchData;
 }
 
+/**
+ * Calculates whether the movement went either left or right
+ * @param touchData A POJO as returned from `parseInitialTouchData` or `parseTouchData`
+ * @returns {boolean} true, false
+ */
 export function isHorizontal(touchData){
   const direction = getDirection(touchData.data.current.distanceX, touchData.data.current.distanceY);
   return direction === 'left' || direction === 'right';
 }
+
+/**
+ * Calculates whether the movement went either up or down
+ * @param touchData A POJO as returned from `parseInitialTouchData` or `parseTouchData`
+ * @returns {boolean} true, false
+ */
 export function isVertical(touchData){
   const direction = getDirection(touchData.data.current.distanceX, touchData.data.current.distanceY);
   return direction === 'down' || direction === 'up';
 }
 
+/**
+ * Calculates the direction of the touch movement
+ * @param x Number denoting the distance moved from the origin on the X axis
+ * @param y Number denoting the distance moved from the origin on the Y axis
+ * @returns {string} up, right, down, left
+ */
 function getDirection(x, y) {
   if(x === y){
     return 'none';
@@ -106,10 +123,26 @@ function getDirection(x, y) {
   }
 }
 
+/**
+ * Calculates the distance between two points
+ * @param x0 X coordinate of the origin
+ * @param x1 X coordinate of the current position
+ * @param y0 Y coordinate of the origin
+ * @param y1 Y coordinate of the current position
+ * @returns {number} Distance between the two points
+ */
 function getPointDistance(x0, x1, y0, y1) {
   return (Math.sqrt(((x1 - x0) * (x1 - x0)) + ((y1 - y0) * (y1 - y0))));
 }
 
+/**
+ * Calculates the angle between two points
+ * @param originX
+ * @param originY
+ * @param projectionX
+ * @param projectionY
+ * @returns {number} Angle between the two points
+ */
 function getAngle(originX, originY, projectionX, projectionY) {
   const angle = Math.atan2(projectionY - originY, projectionX - originX) * ((180) / Math.PI);
   return 360 - ((angle < 0) ? (360 + angle) : angle);
