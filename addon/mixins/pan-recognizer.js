@@ -12,14 +12,50 @@ import parseTouchData, {
 export default Mixin.create(RunOnRafMixin, {
   panManager: service(),
 
-  // public
+  /**
+   * The minimum movement that's needed to trigger a pan event.
+   *
+   * @argument threshold
+   * @type Number
+   * @default 10
+   */
   threshold: 10,
-  axis: 'horizontal',
-  useCapture: false,
-  preventScroll: true,
-  panArea: null,
 
-  // private
+  /**
+   * The axis on which the pan is happening. Can be either 'horizontal' or 'vertical'.
+   *
+   * @argument axis
+   * @type String
+   * @default 'horizontal'
+   */
+  axis: 'horizontal',
+
+  /**
+   * Whether or not to handle events in the capture phase instead of the bubble phase.
+   *
+   * @argument useCapture
+   * @type Boolean
+   * @default false
+   */
+  useCapture: false,
+
+  /**
+   * Tries to prevent scolling when true.
+   *
+   * @argument preventScroll
+   * @type Boolean
+   * @default true
+   */
+  preventScroll: true,
+
+  /**
+   * The current Touch instances that are being tracked.
+   *
+   * @property currentTouches
+   * @type Map|null
+   * @default null
+   * @private
+   */
   currentTouches: null,
 
   init(){
@@ -29,14 +65,53 @@ export default Mixin.create(RunOnRafMixin, {
   },
 
   // hooks
-  didPanStart(){},
-  didPan(){},
-  didPanEnd(){},
+
+  /**
+   * Called when a pan started. Touch data is passed as the first argument.
+   *
+   * @argument didPanStart
+   * @param {Object} touchData The initial touch data.
+   * @type Function
+   */
+  didPanStart(touchData){},
+
+  /**
+   * Called each time movement is detected after a pan was started. Touch data is passed as the first argument.
+   *
+   * @argument didPan
+   * @param {Object} touchData Initial and current touch data.
+   * @type Function
+   */
+  didPan(touchData){},
+
+  /**
+   * Called when a pan has ended. Touch data is passed as the first argument.
+   *
+   * @argument didPanEnd
+   * @param {Object} touchData Initial and current touch data.
+   * @type Function
+   */
+  didPanEnd(touchData){},
 
   //public functions
+
+  /**
+   * Locks the current pan to this instance and thus prevents any further bubbling of the event.
+   * Useful when nesting pan recognizers.
+   *
+   * @method lockPan
+   * @public
+   */
   lockPan(){
     get(this, 'panManager').lock(get(this, 'elementId'));
   },
+
+  /**
+   * Unlocks the current pan event which makes panning on other elements possible again.
+   *
+   * @method unlockPan
+   * @public
+   */
   unlockPan(){
     get(this, 'panManager').unlock(get(this, 'elementId'));
   },
