@@ -1,6 +1,10 @@
 import Mixin from '@ember/object/mixin';
 import { run } from '@ember/runloop';
 
+/**
+ * @class RunOnRafMixin
+ * @private
+ */
 export default Mixin.create({
   runOnRaf(fn) {
     //TODO: emcTicking is set on the ember component instance, prevents multiple schedules of different things (?)

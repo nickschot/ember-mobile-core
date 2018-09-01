@@ -1,5 +1,9 @@
 import Easings from './easings';
 
+/**
+ * @class Tween
+ * @private
+ */
 export default class Tween {
   constructor(callback = () => {}, opts = {}){
     this.running = false;

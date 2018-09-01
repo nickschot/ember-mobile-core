@@ -9,6 +9,12 @@ import parseTouchData, {
   isVertical
 } from 'ember-mobile-core/utils/parse-touch-data';
 
+/**
+ * Pan Recognizer mixin.
+ *
+ * @class PanRecognizerMixin
+ * @public
+ */
 export default Mixin.create(RunOnRafMixin, {
   panManager: service(),
 
@@ -52,7 +58,7 @@ export default Mixin.create(RunOnRafMixin, {
    * The current Touch instances that are being tracked.
    *
    * @property currentTouches
-   * @type Map|null
+   * @type Map
    * @default null
    * @private
    */
@@ -69,29 +75,26 @@ export default Mixin.create(RunOnRafMixin, {
   /**
    * Called when a pan started. Touch data is passed as the first argument.
    *
-   * @argument didPanStart
-   * @param {Object} touchData The initial touch data.
+   * @property didPanStart
    * @type Function
    */
-  didPanStart(touchData){},
+  didPanStart(){},
 
   /**
    * Called each time movement is detected after a pan was started. Touch data is passed as the first argument.
    *
-   * @argument didPan
-   * @param {Object} touchData Initial and current touch data.
+   * @property didPan
    * @type Function
    */
-  didPan(touchData){},
+  didPan(){},
 
   /**
    * Called when a pan has ended. Touch data is passed as the first argument.
    *
-   * @argument didPanEnd
-   * @param {Object} touchData Initial and current touch data.
+   * @property didPanEnd
    * @type Function
    */
-  didPanEnd(touchData){},
+  didPanEnd(){},
 
   //public functions
 
@@ -136,6 +139,7 @@ export default Mixin.create(RunOnRafMixin, {
     this.element.addEventListener('touchend', get(this, 'didTouchEnd').bind(this), options);
     this.element.addEventListener('touchcancel', get(this, 'didTouchEnd').bind(this), options);
   },
+
   willDestroyElement(){
     this._super(...arguments);
 
@@ -150,6 +154,7 @@ export default Mixin.create(RunOnRafMixin, {
   },
 
   // events
+
   didTouchStart(e){
     const currentTouches = get(this, 'currentTouches');
 
@@ -159,6 +164,7 @@ export default Mixin.create(RunOnRafMixin, {
       currentTouches.set(touch.identifier, touchData);
     }
   },
+
   didTouchMove(e){
     const currentTouches = get(this, 'currentTouches');
 
@@ -209,6 +215,7 @@ export default Mixin.create(RunOnRafMixin, {
       currentTouches.set(touch.identifier, touchData);
     }
   },
+
   didTouchEnd(e){
     const currentTouches = get(this, 'currentTouches');
 

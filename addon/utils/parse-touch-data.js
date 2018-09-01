@@ -3,11 +3,10 @@ import { assign } from "@ember/polyfills"
 /**
  * Generate initial touch data for passed Touch
  *
- * @method parseInitialTouchData
+ * @function parseInitialTouchData
  * @param {Touch} touch A Touch instance
  * @param {TouchEvent} e The touch{start,move,end} event
- * @return {Object} Returns a TouchData object.
- * @private
+ * @return {Object} Returns a TouchData object
  */
 export function parseInitialTouchData(touch, e){
   return {
@@ -35,12 +34,11 @@ export function parseInitialTouchData(touch, e){
 /**
  * Generates useful touch data from current event based on previously generated data
  *
- * @method parseTouchData
+ * @function parseTouchData
  * @param {Object} previousTouchData Previous data returned by this or the parseInitialTouchData function
  * @param {Touch} touch A Touch instance
  * @param {TouchEvent} e The touch{start,move,end} event
  * @return {Object} The new touch data
- * @private
  */
 export default function parseTouchData(previousTouchData, touch, e) {
   const touchData = assign({}, previousTouchData);
@@ -96,10 +94,9 @@ export default function parseTouchData(previousTouchData, touch, e) {
 /**
  * Decides if the pan event is horizontal.
  *
- * @method isHorizontal
+ * @function isHorizontal
  * @param {Object} touchData
- * @return {Boolean} True if horizontal.
- * @private
+ * @return {Boolean} True if horizontal
  */
 export function isHorizontal(touchData){
   const direction = getDirection(touchData.data.current.distanceX, touchData.data.current.distanceY);
@@ -109,10 +106,9 @@ export function isHorizontal(touchData){
 /**
  * Decides if the pan event is vertical
  *
- * @method isVertical
+ * @function isVertical
  * @param {Object} touchData
  * @return {Boolean} True if vertical
- * @private
  */
 export function isVertical(touchData){
   const direction = getDirection(touchData.data.current.distanceX, touchData.data.current.distanceY);
@@ -122,11 +118,10 @@ export function isVertical(touchData){
 /**
  * Decides the direction of the movement based on relative distance from the pan's origin.
  *
- * @method getDirection
+ * @function getDirection
  * @param {Number} x
  * @param {Number} y
  * @return {String} Returns the direction of the pan event. One of 'left', 'right', 'up', 'down'.
- * @private
  */
 function getDirection(x, y) {
   if(x === y){
@@ -138,10 +133,29 @@ function getDirection(x, y) {
   }
 }
 
+/**
+ * Calculates the distance between two points.
+ *
+ * @function getPointDistance
+ * @param {Number} x0
+ * @param {Number} x1
+ * @param {Number} y0
+ * @param {Number} y1
+ * @return {Number} The distance between the two points.
+ */
 function getPointDistance(x0, x1, y0, y1) {
   return (Math.sqrt(((x1 - x0) * (x1 - x0)) + ((y1 - y0) * (y1 - y0))));
 }
 
+/**
+ * Calculates the angle between two points.
+ *
+ * @param {Number} originX
+ * @param {Number} originY
+ * @param {Number} projectionX
+ * @param {Number} projectionY
+ * @return {Number} The angle between the two points.
+ */
 function getAngle(originX, originY, projectionX, projectionY) {
   const angle = Math.atan2(projectionY - originY, projectionX - originX) * ((180) / Math.PI);
   return 360 - ((angle < 0) ? (360 + angle) : angle);
