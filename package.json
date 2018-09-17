@@ -22,7 +22,6 @@
     "test": "ember try:each"
   },
   "dependencies": {
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "ember-auto-import": "^1.2.13",
     "ember-cli-babel": "^6.6.0",
     "wobble": "^1.5.0"

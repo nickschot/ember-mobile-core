@@ -1,4 +1,5 @@
 import { Spring as Wobble } from 'wobble';
+import { assign } from '@ember/polyfills';
 
 /**
  * @class Spring
@@ -12,12 +13,11 @@ export default class Spring {
    */
   constructor(callback = () => {}, opts = {}){
     // use iOS configuration by default
-    const config = {
+    const config = assign({
       stiffness: 1000,
       damping: 500,
-      mass: 3,
-      ...opts
-    };
+      mass: 3
+    }, opts);
 
     this.spring = new Wobble(config);
     this.spring.onUpdate(callback);
