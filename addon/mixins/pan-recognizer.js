@@ -3,8 +3,9 @@ import { get, set } from '@ember/object';
 import { inject as service } from '@ember/service';
 
 import RunOnRafMixin from 'ember-mobile-core/mixins/run-on-raf';
-import parseTouchData, {
+import {
   parseInitialTouchData,
+  parseTouchData,
   isHorizontal,
   isVertical
 } from 'ember-mobile-core/utils/parse-touch-data';
