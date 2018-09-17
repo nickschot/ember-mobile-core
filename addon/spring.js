@@ -5,6 +5,11 @@ import { Spring as Wobble } from 'wobble';
  * @private
  */
 export default class Spring {
+
+  /**
+   * @param callback
+   * @param opts See: https://github.com/skevy/wobble#api
+   */
   constructor(callback = () => {}, opts = {}){
     // use iOS configuration by default
     const config = {
