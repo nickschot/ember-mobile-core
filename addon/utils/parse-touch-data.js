@@ -64,8 +64,11 @@ export function parseTouchData(previousTouchData, touch, e) {
     ? data.current.overallVelocityX
     : data.current.overallVelocityY;
 
-  const deltaTime = e.timeStamp - data.cache.velocity.timeStamp;
-  if(deltaTime > 33.34) {
+  // we don't update the velocity on the final touchend event as nothing but the timestamp has changed
+  // which always results in a velocity of 0
+  if(e.type !== 'touchend'){
+    const deltaTime = e.timeStamp - data.cache.velocity.timeStamp;
+
     data.current.velocityX = (data.current.distanceX - data.cache.velocity.distanceX) / deltaTime || 0;
     data.current.velocityY = (data.current.distanceY - data.cache.velocity.distanceY) / deltaTime || 0;
     data.current.velocity = Math.abs(data.current.velocityX) > Math.abs(data.current.velocityY)
