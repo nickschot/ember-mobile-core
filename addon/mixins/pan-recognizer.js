@@ -12,7 +12,8 @@ import parseTouchData, {
 /**
  * Pan Recognizer mixin.
  *
- * @class PanRecognizerMixin
+ * @class PanRecognizer
+ * @namespace Mixins
  * @public
  */
 export default Mixin.create(RunOnRafMixin, {
@@ -75,7 +76,7 @@ export default Mixin.create(RunOnRafMixin, {
   /**
    * Called when a pan started. Touch data is passed as the first argument.
    *
-   * @property didPanStart
+   * @argument didPanStart
    * @type Function
    */
   didPanStart(){},
@@ -83,7 +84,7 @@ export default Mixin.create(RunOnRafMixin, {
   /**
    * Called each time movement is detected after a pan was started. Touch data is passed as the first argument.
    *
-   * @property didPan
+   * @argument didPan
    * @type Function
    */
   didPan(){},
@@ -91,7 +92,7 @@ export default Mixin.create(RunOnRafMixin, {
   /**
    * Called when a pan has ended. Touch data is passed as the first argument.
    *
-   * @property didPanEnd
+   * @argument didPanEnd
    * @type Function
    */
   didPanEnd(){},

@@ -150,6 +150,7 @@ function getPointDistance(x0, x1, y0, y1) {
 /**
  * Calculates the angle between two points.
  *
+ * @function getAngle
  * @param {Number} originX
  * @param {Number} originY
  * @param {Number} projectionX

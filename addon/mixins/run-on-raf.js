@@ -2,7 +2,8 @@ import Mixin from '@ember/object/mixin';
 import { run } from '@ember/runloop';
 
 /**
- * @class RunOnRafMixin
+ * @class RunOnRaf
+ * @namespace Mixins
  * @private
  */
 export default Mixin.create({
