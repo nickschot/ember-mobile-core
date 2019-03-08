@@ -3,7 +3,6 @@ import { get, set } from '@ember/object';
 
 /**
  * @class PanManagerService
- * @namespace Services
  * @public
  */
 export default Service.extend({

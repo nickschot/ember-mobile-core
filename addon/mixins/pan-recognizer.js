@@ -14,7 +14,6 @@ import {
  * Pan Recognizer mixin.
  *
  * @class PanRecognizer
- * @namespace Mixins
  * @public
  */
 export default Mixin.create(RunOnRafMixin, {
