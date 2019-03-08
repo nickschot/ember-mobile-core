@@ -23,16 +23,17 @@ export default Mixin.create(RunOnRafMixin, {
   /**
    * The minimum movement that's needed to trigger a pan event.
    *
-   * @argument threshold
+   * @property threshold
    * @type Number
    * @default 10
+   * @public
    */
   threshold: 10,
 
   /**
    * The axis on which the pan is happening. Can be either 'horizontal' or 'vertical'.
    *
-   * @argument axis
+   * @property axis
    * @type String
    * @default 'horizontal'
    */
@@ -41,7 +42,7 @@ export default Mixin.create(RunOnRafMixin, {
   /**
    * Whether or not to handle events in the capture phase instead of the bubble phase.
    *
-   * @argument useCapture
+   * @property useCapture
    * @type Boolean
    * @default false
    */
@@ -50,7 +51,7 @@ export default Mixin.create(RunOnRafMixin, {
   /**
    * Tries to prevent scolling when true.
    *
-   * @argument preventScroll
+   * @property preventScroll
    * @type Boolean
    * @default true
    */
@@ -77,7 +78,7 @@ export default Mixin.create(RunOnRafMixin, {
   /**
    * Called when a pan started. Touch data is passed as the first argument.
    *
-   * @argument didPanStart
+   * @property didPanStart
    * @type Function
    */
   didPanStart(){},
@@ -85,7 +86,7 @@ export default Mixin.create(RunOnRafMixin, {
   /**
    * Called each time movement is detected after a pan was started. Touch data is passed as the first argument.
    *
-   * @argument didPan
+   * @property didPan
    * @type Function
    */
   didPan(){},
@@ -93,7 +94,7 @@ export default Mixin.create(RunOnRafMixin, {
   /**
    * Called when a pan has ended. Touch data is passed as the first argument.
    *
-   * @argument didPanEnd
+   * @property didPanEnd
    * @type Function
    */
   didPanEnd(){},

@@ -4,6 +4,7 @@ import { assign } from "@ember/polyfills"
  * Generate initial touch data for passed Touch
  *
  * @function parseInitialTouchData
+ * @namespace Utils
  * @param {Touch} touch A Touch instance
  * @param {TouchEvent} e The touch{start,move,end} event
  * @return {Object} Returns a TouchData object
@@ -35,6 +36,7 @@ export function parseInitialTouchData(touch, e){
  * Generates useful touch data from current event based on previously generated data
  *
  * @function parseTouchData
+ * @namespace Utils
  * @param {Object} previousTouchData Previous data returned by this or the parseInitialTouchData function
  * @param {Touch} touch A Touch instance
  * @param {TouchEvent} e The touch{start,move,end} event
@@ -95,8 +97,9 @@ export function parseTouchData(previousTouchData, touch, e) {
  * Calculates whether or not the movement went left or right
  *
  * @function isHorizontal
- * @param touchData A POJO as returned from `parseInitialTouchData` or `parseTouchData`
- * @returns {boolean} True if horizontal
+ * @namespace Utils
+ * @param {TouchData} touchData A POJO as returned from `parseInitialTouchData` or `parseTouchData`
+ * @return {boolean} True if horizontal
  */
 export function isHorizontal(touchData){
   const direction = getDirection(touchData.data.current.distanceX, touchData.data.current.distanceY);
@@ -107,8 +110,9 @@ export function isHorizontal(touchData){
  * Calculates whether or not the movement went up or down
  *
  * @function isVertical
- * @param touchData A POJO as returned from `parseInitialTouchData` or `parseTouchData`
- * @returns {boolean} true if vertical
+ * @namespace Utils
+ * @param {TouchData} touchData A POJO as returned from `parseInitialTouchData` or `parseTouchData`
+ * @return {boolean} true if vertical
  */
 export function isVertical(touchData){
   const direction = getDirection(touchData.data.current.distanceX, touchData.data.current.distanceY);
@@ -119,9 +123,10 @@ export function isVertical(touchData){
  * Calculates the direction of the touch movement
  *
  * @function getDirection
+ * @namespace Utils
  * @param {Number} x The distance moved from the origin on the X axis
  * @param {Number} y The the distance moved from the origin on the Y axis
- * @returns {string} The direction of the pan event. One of 'left', 'right', 'up', 'down'.
+ * @return {string} The direction of the pan event. One of 'left', 'right', 'up', 'down'.
  */
 function getDirection(x, y) {
   if(x === y){
@@ -137,11 +142,12 @@ function getDirection(x, y) {
  * Calculates the distance between two points
  *
  * @function getPointDistance
+ * @namespace Utils
  * @param {number} x0 X coordinate of the origin
  * @param {number} x1 X coordinate of the current position
  * @param {number} y0 Y coordinate of the origin
  * @param {number} y1 Y coordinate of the current position
- * @returns {number} Distance between the two points
+ * @return {number} Distance between the two points
  */
 function getPointDistance(x0, x1, y0, y1) {
   return (Math.sqrt(((x1 - x0) * (x1 - x0)) + ((y1 - y0) * (y1 - y0))));
@@ -151,11 +157,12 @@ function getPointDistance(x0, x1, y0, y1) {
  * Calculates the angle between two points.
  *
  * @function getAngle
+ * @namespace Utils
  * @param {number} originX
  * @param {number} originY
  * @param {number} projectionX
  * @param {number} projectionY
- * @returns {number} Angle between the two points
+ * @return {number} Angle between the two points
  */
 function getAngle(originX, originY, projectionX, projectionY) {
   const angle = Math.atan2(projectionY - originY, projectionX - originX) * ((180) / Math.PI);
