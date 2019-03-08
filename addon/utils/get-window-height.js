@@ -1,7 +1,10 @@
 /**
- * Return the current window width
+ * Returns the current `window` height.
+ *
  * NOTE: do not use in FastBoot
- * @returns {number}
+ *
+ * @function getWindowHeight
+ * @return {number} The height of the `window`.
  */
 export default function getWindowHeight() {
   return window.innerHeight;

@@ -1,7 +1,10 @@
 /**
- * Return the current window width
+ * Returns the current `window` width.
+ *
  * NOTE: do not use in FastBoot
- * @returns {number}
+ *
+ * @function getWindowWidth
+ * @return {Number} The width of the `window`.
  */
 export default function getWindowWidth() {
   return window.innerWidth;

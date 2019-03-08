@@ -10,17 +10,60 @@ import {
   isVertical
 } from 'ember-mobile-core/utils/parse-touch-data';
 
+/**
+ * Pan Recognizer mixin.
+ *
+ * @class PanRecognizer
+ * @public
+ */
 export default Mixin.create(RunOnRafMixin, {
   panManager: service(),
 
-  // public
+  /**
+   * The minimum movement that's needed to trigger a pan event.
+   *
+   * @property threshold
+   * @type Number
+   * @default 10
+   * @public
+   */
   threshold: 10,
-  axis: 'horizontal',
-  useCapture: false,
-  preventScroll: true,
-  panArea: null,
 
-  // private
+  /**
+   * The axis on which the pan is happening. Can be either 'horizontal' or 'vertical'.
+   *
+   * @property axis
+   * @type String
+   * @default 'horizontal'
+   */
+  axis: 'horizontal',
+
+  /**
+   * Whether or not to handle events in the capture phase instead of the bubble phase.
+   *
+   * @property useCapture
+   * @type Boolean
+   * @default false
+   */
+  useCapture: false,
+
+  /**
+   * Tries to prevent scolling when true.
+   *
+   * @property preventScroll
+   * @type Boolean
+   * @default true
+   */
+  preventScroll: true,
+
+  /**
+   * The current Touch instances that are being tracked.
+   *
+   * @property currentTouches
+   * @type Map
+   * @default null
+   * @private
+   */
   currentTouches: null,
 
   init(){
@@ -30,14 +73,50 @@ export default Mixin.create(RunOnRafMixin, {
   },
 
   // hooks
+
+  /**
+   * Called when a pan started. Touch data is passed as the first argument.
+   *
+   * @property didPanStart
+   * @type Function
+   */
   didPanStart(){},
+
+  /**
+   * Called each time movement is detected after a pan was started. Touch data is passed as the first argument.
+   *
+   * @property didPan
+   * @type Function
+   */
   didPan(){},
+
+  /**
+   * Called when a pan has ended. Touch data is passed as the first argument.
+   *
+   * @property didPanEnd
+   * @type Function
+   */
   didPanEnd(){},
 
   //public functions
+
+  /**
+   * Locks the current pan to this instance and thus prevents any further bubbling of the event.
+   * Useful when nesting pan recognizers.
+   *
+   * @method lockPan
+   * @public
+   */
   lockPan(){
     get(this, 'panManager').lock(get(this, 'elementId'));
   },
+
+  /**
+   * Unlocks the current pan event which makes panning on other elements possible again.
+   *
+   * @method unlockPan
+   * @public
+   */
   unlockPan(){
     get(this, 'panManager').unlock(get(this, 'elementId'));
   },
@@ -62,6 +141,7 @@ export default Mixin.create(RunOnRafMixin, {
     this.element.addEventListener('touchend', get(this, 'didTouchEnd').bind(this), options);
     this.element.addEventListener('touchcancel', get(this, 'didTouchEnd').bind(this), options);
   },
+
   willDestroyElement(){
     this._super(...arguments);
 
@@ -76,6 +156,7 @@ export default Mixin.create(RunOnRafMixin, {
   },
 
   // events
+
   didTouchStart(e){
     const currentTouches = get(this, 'currentTouches');
 
@@ -85,6 +166,7 @@ export default Mixin.create(RunOnRafMixin, {
       currentTouches.set(touch.identifier, touchData);
     }
   },
+
   didTouchMove(e){
     const currentTouches = get(this, 'currentTouches');
 
@@ -135,6 +217,7 @@ export default Mixin.create(RunOnRafMixin, {
       currentTouches.set(touch.identifier, touchData);
     }
   },
+
   didTouchEnd(e){
     const currentTouches = get(this, 'currentTouches');
 
