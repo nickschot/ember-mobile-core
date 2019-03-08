@@ -40,7 +40,7 @@ export function parseInitialTouchData(touch, e){
  * @param {TouchEvent} e The touch{start,move,end} event
  * @return {Object} The new touch data
  */
-export default function parseTouchData(previousTouchData, touch, e) {
+export function parseTouchData(previousTouchData, touch, e) {
   const touchData = assign({}, previousTouchData);
   const data = touchData.data;
 
@@ -92,11 +92,11 @@ export default function parseTouchData(previousTouchData, touch, e) {
 }
 
 /**
- * Decides if the pan event is horizontal.
+ * Calculates whether or not the movement went left or right
  *
  * @function isHorizontal
- * @param {Object} touchData
- * @return {Boolean} True if horizontal
+ * @param touchData A POJO as returned from `parseInitialTouchData` or `parseTouchData`
+ * @returns {boolean} True if horizontal
  */
 export function isHorizontal(touchData){
   const direction = getDirection(touchData.data.current.distanceX, touchData.data.current.distanceY);
@@ -104,11 +104,11 @@ export function isHorizontal(touchData){
 }
 
 /**
- * Decides if the pan event is vertical
+ * Calculates whether or not the movement went up or down
  *
  * @function isVertical
- * @param {Object} touchData
- * @return {Boolean} True if vertical
+ * @param touchData A POJO as returned from `parseInitialTouchData` or `parseTouchData`
+ * @returns {boolean} true if vertical
  */
 export function isVertical(touchData){
   const direction = getDirection(touchData.data.current.distanceX, touchData.data.current.distanceY);
@@ -116,12 +116,12 @@ export function isVertical(touchData){
 }
 
 /**
- * Decides the direction of the movement based on relative distance from the pan's origin.
+ * Calculates the direction of the touch movement
  *
  * @function getDirection
- * @param {Number} x
- * @param {Number} y
- * @return {String} Returns the direction of the pan event. One of 'left', 'right', 'up', 'down'.
+ * @param {Number} x The distance moved from the origin on the X axis
+ * @param {Number} y The the distance moved from the origin on the Y axis
+ * @returns {string} The direction of the pan event. One of 'left', 'right', 'up', 'down'.
  */
 function getDirection(x, y) {
   if(x === y){
@@ -134,14 +134,14 @@ function getDirection(x, y) {
 }
 
 /**
- * Calculates the distance between two points.
+ * Calculates the distance between two points
  *
  * @function getPointDistance
- * @param {Number} x0
- * @param {Number} x1
- * @param {Number} y0
- * @param {Number} y1
- * @return {Number} The distance between the two points.
+ * @param {number} x0 X coordinate of the origin
+ * @param {number} x1 X coordinate of the current position
+ * @param {number} y0 Y coordinate of the origin
+ * @param {number} y1 Y coordinate of the current position
+ * @returns {number} Distance between the two points
  */
 function getPointDistance(x0, x1, y0, y1) {
   return (Math.sqrt(((x1 - x0) * (x1 - x0)) + ((y1 - y0) * (y1 - y0))));
@@ -151,11 +151,11 @@ function getPointDistance(x0, x1, y0, y1) {
  * Calculates the angle between two points.
  *
  * @function getAngle
- * @param {Number} originX
- * @param {Number} originY
- * @param {Number} projectionX
- * @param {Number} projectionY
- * @return {Number} The angle between the two points.
+ * @param {number} originX
+ * @param {number} originY
+ * @param {number} projectionX
+ * @param {number} projectionY
+ * @returns {number} Angle between the two points
  */
 function getAngle(originX, originY, projectionX, projectionY) {
   const angle = Math.atan2(projectionY - originY, projectionX - originX) * ((180) / Math.PI);

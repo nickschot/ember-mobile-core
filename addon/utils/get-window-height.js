@@ -1,10 +1,12 @@
 /**
  * Returns the current `window` height.
  *
+ * NOTE: do not use in FastBoot
+ *
  * @function getWindowHeight
  * @namespace Utils
- * @return {Number} The height of the `window`.
+ * @returns {number} The height of the `window`.
  */
 export default function getWindowHeight() {
-  return window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
+  return window.innerHeight;
 }
