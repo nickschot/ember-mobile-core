@@ -2,6 +2,8 @@ import { Spring as Wobble } from 'wobble';
 import { assign } from '@ember/polyfills';
 
 /**
+ * A thin wrapper around the `wobble` package which provides spring physics (damped harmonic oscillator).
+ *
  * @class Spring
  * @private
  */

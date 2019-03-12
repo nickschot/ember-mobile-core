@@ -48,7 +48,7 @@ export default Mixin.create(RunOnRafMixin, {
   useCapture: false,
 
   /**
-   * Tries to prevent scolling when true.
+   * Tries to prevent scrolling when true.
    *
    * @property preventScroll
    * @type Boolean
@@ -75,7 +75,7 @@ export default Mixin.create(RunOnRafMixin, {
   // hooks
 
   /**
-   * Called when a pan started. Touch data is passed as the first argument.
+   * Hook called when a pan started. Touch data is passed as the first argument.
    *
    * @property didPanStart
    * @type Function
@@ -83,7 +83,7 @@ export default Mixin.create(RunOnRafMixin, {
   didPanStart(){},
 
   /**
-   * Called each time movement is detected after a pan was started. Touch data is passed as the first argument.
+   * Hook called each time movement is detected after a pan was started. Touch data is passed as the first argument.
    *
    * @property didPan
    * @type Function
@@ -91,7 +91,7 @@ export default Mixin.create(RunOnRafMixin, {
   didPan(){},
 
   /**
-   * Called when a pan has ended. Touch data is passed as the first argument.
+   * Hook called when a pan has ended. Touch data is passed as the first argument.
    *
    * @property didPanEnd
    * @type Function
