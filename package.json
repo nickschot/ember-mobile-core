@@ -1,6 +1,6 @@
 {
   "name": "ember-mobile-core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Provides a pan recognizer and some utils for the ember-mobile-* addons.",
   "keywords": [
     "ember-addon"
