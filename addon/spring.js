@@ -10,16 +10,17 @@ import { assign } from '@ember/polyfills';
 export default class Spring {
 
   /**
-   * @param callback
-   * @param opts See: https://github.com/skevy/wobble#api
+   * @method constructor
+   * @param {function} callback Called whenever the spring updates
+   * @param {object} options See: https://github.com/skevy/wobble#api
    */
-  constructor(callback = () => {}, opts = {}){
+  constructor(callback = () => {}, options = {}){
     // use iOS configuration by default
     const config = assign({
       stiffness: 1000,
       damping: 500,
       mass: 3
-    }, opts);
+    }, options);
 
     this.spring = new Wobble(config);
     this.spring.onUpdate(callback);
