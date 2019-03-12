@@ -24,7 +24,7 @@ ember install ember-mobile-core
 Usage
 ------------------------------------------------------------------------------
 
-[Longer description of how to use the addon in apps.]
+[View the docs here.](https://nickschot.github.io/ember-mobile-core/)
 
 
 Contributing
