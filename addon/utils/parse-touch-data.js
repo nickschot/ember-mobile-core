@@ -7,6 +7,7 @@ import { assign } from "@ember/polyfills"
  * @param {Touch} touch A Touch instance
  * @param {TouchEvent} e The touch{start,move,end} event
  * @return {Object} Returns a TouchData object
+ * @private
  */
 export function parseInitialTouchData(touch, e){
   return {
@@ -39,6 +40,7 @@ export function parseInitialTouchData(touch, e){
  * @param {Touch} touch A Touch instance
  * @param {TouchEvent} e The touch{start,move,end} event
  * @return {Object} The new touch data
+ * @private
  */
 export function parseTouchData(previousTouchData, touch, e) {
   const touchData = assign({}, previousTouchData);
@@ -100,6 +102,7 @@ export function parseTouchData(previousTouchData, touch, e) {
  * @function isHorizontal
  * @param {TouchData} touchData A POJO as returned from `parseInitialTouchData` or `parseTouchData`
  * @return {boolean} True if horizontal
+ * @private
  */
 export function isHorizontal(touchData){
   const direction = getDirection(touchData.data.current.distanceX, touchData.data.current.distanceY);
@@ -112,6 +115,7 @@ export function isHorizontal(touchData){
  * @function isVertical
  * @param {TouchData} touchData A POJO as returned from `parseInitialTouchData` or `parseTouchData`
  * @return {boolean} true if vertical
+ * @private
  */
 export function isVertical(touchData){
   const direction = getDirection(touchData.data.current.distanceX, touchData.data.current.distanceY);
@@ -125,6 +129,7 @@ export function isVertical(touchData){
  * @param {Number} x The distance moved from the origin on the X axis
  * @param {Number} y The the distance moved from the origin on the Y axis
  * @return {string} The direction of the pan event. One of 'left', 'right', 'up', 'down'.
+ * @private
  */
 function getDirection(x, y) {
   if(x === y){
@@ -145,6 +150,7 @@ function getDirection(x, y) {
  * @param {number} y0 Y coordinate of the origin
  * @param {number} y1 Y coordinate of the current position
  * @return {number} Distance between the two points
+ * @private
  */
 function getPointDistance(x0, x1, y0, y1) {
   return (Math.sqrt(((x1 - x0) * (x1 - x0)) + ((y1 - y0) * (y1 - y0))));
@@ -159,6 +165,7 @@ function getPointDistance(x0, x1, y0, y1) {
  * @param {number} projectionX
  * @param {number} projectionY
  * @return {number} Angle between the two points
+ * @private
  */
 function getAngle(originX, originY, projectionX, projectionY) {
   const angle = Math.atan2(projectionY - originY, projectionX - originX) * ((180) / Math.PI);

@@ -8,14 +8,28 @@ import { get, set } from '@ember/object';
  * NOTE: You will likely not need to use this service directly. The `PanRecognizer` mixin provides lock methods.
  *
  * @class PanManagerService
- * @public
+ * @private
  */
 export default Service.extend({
   panLocked: false,
 
+  /**
+   * Set's `panLocked` to the passed `elementId`.
+   *
+   * @method lock
+   * @param {string} elementId
+   */
   lock(elementId){
     set(this, 'panLocked', elementId);
   },
+
+
+  /**
+   * Set's `panLocked` to false if it was locked to the passed `elementId`.
+   *
+   * @method unlock
+   * @param {string} elementId
+   */
   unlock(elementId){
     if(get(this, 'panLocked') === elementId){
       set(this, 'panLocked', false);
