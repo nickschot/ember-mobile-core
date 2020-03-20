@@ -137,7 +137,7 @@ export default Mixin.create(RunOnRafMixin, {
       passive: true
     };
     this.element.addEventListener('touchstart', get(this, 'didTouchStart').bind(this), options);
-    this.element.addEventListener('touchmove', get(this, 'didTouchMove').bind(this), {capture: get(this, 'useCapture')});
+    this.element.addEventListener('touchmove', get(this, 'didTouchMove').bind(this), options);
     this.element.addEventListener('touchend', get(this, 'didTouchEnd').bind(this), options);
     this.element.addEventListener('touchcancel', get(this, 'didTouchEnd').bind(this), options);
   },
@@ -150,7 +150,7 @@ export default Mixin.create(RunOnRafMixin, {
       passive: true
     };
     this.element.removeEventListener('touchstart', get(this, 'didTouchStart').bind(this), options);
-    this.element.removeEventListener('touchmove', get(this, 'didTouchMove').bind(this), {capture: get(this, 'useCapture')});
+    this.element.removeEventListener('touchmove', get(this, 'didTouchMove').bind(this), options);
     this.element.removeEventListener('touchend', get(this, 'didTouchEnd').bind(this), options);
     this.element.removeEventListener('touchcancel', get(this, 'didTouchEnd').bind(this), options);
   },
